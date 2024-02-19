@@ -1,0 +1,9 @@
+[submodule "linux"]
+	path = source/linux
+	url = https://git.launchpad.net/~ubuntu-kernel/ubuntu/+source/linux/+git/noble
+[submodule "u-boot"]
+	path = source/u-boot
+	url = https://github.com/u-boot/u-boot
+[submodule "rkbin"]
+	path = source/rkbin
+	url = https://github.com/rockchip-linux/rkbin
