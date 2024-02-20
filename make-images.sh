@@ -1,3 +1,5 @@
+#!/bin/bash
+
 [ "$UID" -eq 0 ] || exec sudo bash "$0" "$@"
 
 img=noble-preinstalled-server-arm64.img
@@ -35,9 +37,10 @@ make_dtb () {
 }
 
 make_uboot () {
-    echo "Making u-boot sdcard/emmc/spi image"
+    echo "Making u-boot sdcard/emmc/spi images"
     cd source/u-boot
     export CROSS_COMPILE=aarch64-linux-gnu-
+    # soquartz
     export ROCKCHIP_TPL="$(ls ../rkbin/bin/rk35/rk3566_ddr_1056MHz_v*.bin | sort | tail -n1)"
     export BL31="$(ls ../rkbin/bin/rk35/rk3568_bl31_v*.elf | sort | tail -n1)"
     make soquartz-cm4-rk3566_defconfig
@@ -51,37 +54,60 @@ make_uboot () {
     mv -f sdcard.img.xz ../../output/u-boot-$(git tag --points-at HEAD)-soquartz.img.xz
     git reset --hard
     git clean -f -d
-    unset CROSS_COMPILE
     unset ROCKCHIP_TPL
     unset BL31
+    # jetson nano
+    git apply ../../patch/u-boot/jetson-nano/*.patch
+    make p3450-0000_defconfig
+    make -j$(nproc)
+    mkdir -p ../../cache/jetson-nano
+    cp u-boot.bin ../../cache/jetson-nano/
+    cat > ../../cache/jetson-nano/flash.sh <<EOF
+#!/bin/bash
+
+echo "Flashing u-boot image"
+wget -nc https://developer.nvidia.com/embedded/l4t/r32_release_v7.1/t210/jetson-210_linux_r32.7.1_aarch64.tbz2
+echo Extracting jetson-210_linux_r32.7.1_aarch64.tbz2
+tar xf jetson-210_linux_r32.7.1_aarch64.tbz2
+docker pull nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1
+docker run -t --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v ./:/workspace nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1 bash /workspace/Linux_for_Tegra/flash.sh -B ./u-boot.bin p3448-0000-max-spi external
+EOF
+    chmod +x ../../cache/jetson-nano/flash.sh
+    wget -nc -P ../../cache/ https://raw.githubusercontent.com/megastep/makeself/master/makeself.sh
+    wget -nc -P ../../cache/ https://raw.githubusercontent.com/megastep/makeself/master/makeself-header.sh
+    chmod +x ../../cache/makeself.sh
+    ../../cache/makeself.sh ../../cache/jetson-nano ../../output/u-boot-$(git tag --points-at HEAD)-jetson-nano.run "Jetson Nano U-Boot flasher" ./flash.sh
+    git reset --hard
+    git clean -f -d
+    unset CROSS_COMPILE
     cd ../..
 }
 
 
 download_img () {
     echo "Downloading" ${img}
-    cd download
+    cd cache/download
     wget -nc https://cdimage.ubuntu.com/ubuntu-server/daily-preinstalled/pending/${img}.xz
-    cd ..
+    cd ../..
 }
 
 extract_img () {
     echo "Extracting" ${img}.xz
-    cd download
+    cd cache/download
     xz --decompress --threads=0 --keep ${img}.xz
-    cd ..
+    cd ../..
 }
 
 open_img () {
     echo "Loop-back mounting" cache/${img}
     read img_root_dev <<<$(grep -o 'loop.p.' <<<"$(kpartx -av cache/${img})")
     img_root_dev=/dev/mapper/${img_root_dev}
-    mount ${img_root_dev} image
+    mount ${img_root_dev} cache/image
 }
 
 close_img () {
     sync
-    unmount_safe image
+    unmount_safe cache/image
     kpartx -d cache/${img}
 }
 
@@ -89,9 +115,9 @@ modify_grub_img () {
     echo "Modifying image for board" ${1}
     board_dtb="$(basename ${boards_dts[${1}]})"
     board_dtb="${board_dtb%.*}.dtb"
-    cp cache/${board_dtb} image/boot/dtb
+    cp cache/${board_dtb} cache/image/boot/dtb
 
-    cat > image/etc/default/grub.d/60_devicetree.cfg <<EOF
+    cat > cache/image/etc/default/grub.d/60_devicetree.cfg <<EOF
 # Devicetree specific Grub settings for UEFI Devicetree Images
 
 # Set the recordfail timeout
@@ -107,26 +133,26 @@ GRUB_CMDLINE_LINUX_DEFAULT="efi=noruntime console=tty1 console=ttyAMA0 ${boards_
 GRUB_TERMINAL=console
 EOF
 
-    cp $(which qemu-aarch64-static) image/usr/bin
-    mount --bind /dev image/dev/
-    mount --bind /sys image/sys/
-    mount --bind /proc image/proc/
+    cp $(which qemu-aarch64-static) cache/image/usr/bin
+    mount --bind /dev cache/image/dev/
+    mount --bind /sys cache/image/sys/
+    mount --bind /proc cache/image/proc/
 
-    chroot image qemu-aarch64-static /bin/bash <<"EOT"
+    chroot cache/image qemu-aarch64-static /bin/bash <<"EOT"
 PATH=/usr/bin:/usr/sbin
 update-grub
 exit
 EOT
 
-    unmount_safe image/dev/
-    unmount_safe image/sys/
-    unmount_safe image/proc/
-    rm  image/usr/bin/qemu-aarch64-static
+    unmount_safe cache/image/dev/
+    unmount_safe cache/image/sys/
+    unmount_safe cache/image/proc/
+    rm  cache/image/usr/bin/qemu-aarch64-static
 }
 
 modify_img () {
     for board in ${boards[@]}; do
-        cp download/${img} cache/
+        cp cache/download/${img} cache/
         open_img 
         modify_grub_img ${board}
         close_img
@@ -149,8 +175,8 @@ unmount_safe () {
 }
 
 mkdir -p cache
-mkdir -p download
-mkdir -p image
+mkdir -p cache/download
+mkdir -p cache/image
 mkdir -p output
 
 make_uboot

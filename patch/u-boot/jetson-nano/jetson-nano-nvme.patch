@@ -1,0 +1,12 @@
+diff --git a/include/configs/p3450-0000.h b/include/configs/p3450-0000.h
+index e60f42eaa7..2e326d1684 100644
+--- a/include/configs/p3450-0000.h
++++ b/include/configs/p3450-0000.h
+@@ -19,6 +19,7 @@
+ #define BOOT_TARGET_DEVICES(func) \
+ 	func(MMC, mmc, 1) \
+ 	func(MMC, mmc, 0) \
++	func(NVME, nvme, 0) \
+ 	func(PXE, pxe, na) \
+ 	func(DHCP, dhcp, na)
+ 
