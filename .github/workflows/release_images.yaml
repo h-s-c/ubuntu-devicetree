@@ -26,7 +26,7 @@ jobs:
           platforms: arm64
 
       - name: Make images
-        run: ./make_images.sh
+        run: ./make-images.sh
 
       - name: Release images
         uses: "marvinpinto/action-automatic-releases@latest"
