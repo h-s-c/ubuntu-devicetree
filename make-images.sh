@@ -117,17 +117,8 @@ modify_grub_img () {
     cat > cache/image/etc/default/grub.d/60_devicetree.cfg <<EOF
 # Devicetree specific Grub settings for UEFI Devicetree Images
 
-# Set the recordfail timeout
-GRUB_RECORDFAIL_TIMEOUT=0
-
-# Do not wait on grub prompt
-GRUB_TIMEOUT=0
-
 # Set the default commandline
 GRUB_CMDLINE_LINUX_DEFAULT="efi=noruntime console=tty1 console=ttyAMA0 ${boards_cmd[${1}]}"
-
-# Set the grub console type
-GRUB_TERMINAL=console
 EOF
 
     cp $(which qemu-aarch64-static) cache/image/usr/bin
