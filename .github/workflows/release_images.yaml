@@ -9,6 +9,10 @@ permissions:
   contents: write
   packages: write
 
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   release:
     runs-on: ubuntu-latest
