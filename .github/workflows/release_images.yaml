@@ -19,11 +19,8 @@ jobs:
           fetch-depth: 0
           submodules: true
 
-      - name: Setup qemu for chroot
-        uses: docker/setup-qemu-action@v3
-        with:
-          image: tonistiigi/binfmt:latest
-          platforms: arm64
+      - name: Install dependencies
+        run: sudo apt update && sudo apt install gcc-aarch64-linux-gnu qemu-user-static makeself
 
       - name: Make images
         run: ./make-images.sh

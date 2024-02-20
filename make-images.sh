@@ -73,10 +73,7 @@ docker pull nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1
 docker run -t --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v ./:/workspace nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1 bash /workspace/Linux_for_Tegra/flash.sh -B ./u-boot.bin p3448-0000-max-spi external
 EOF
     chmod +x ../../cache/jetson-nano/flash.sh
-    wget -nc -P ../../cache/ https://raw.githubusercontent.com/megastep/makeself/master/makeself.sh
-    wget -nc -P ../../cache/ https://raw.githubusercontent.com/megastep/makeself/master/makeself-header.sh
-    chmod +x ../../cache/makeself.sh
-    ../../cache/makeself.sh ../../cache/jetson-nano ../../output/u-boot-$(git tag --points-at HEAD)-jetson-nano.run "Jetson Nano U-Boot flasher" ./flash.sh
+    makeself ../../cache/jetson-nano ../../output/u-boot-$(git tag --points-at HEAD)-jetson-nano.run "Jetson Nano U-Boot flasher" ./flash.sh
     git reset --hard
     git clean -f -d
     unset CROSS_COMPILE
