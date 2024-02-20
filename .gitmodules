@@ -7,3 +7,9 @@
 [submodule "rkbin"]
 	path = source/rkbin
 	url = https://github.com/rockchip-linux/rkbin
+[submodule "arm-trusted-firmware"]
+	path = source/arm-trusted-firmware
+	url = https://github.com/ARM-software/arm-trusted-firmware
+[submodule "edk2-non-osi"]
+	path = source/edk2-non-osi
+	url = https://github.com/tianocore/edk2-non-osi
