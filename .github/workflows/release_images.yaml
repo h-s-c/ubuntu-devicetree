@@ -20,7 +20,7 @@ jobs:
           submodules: true
 
       - name: Install dependencies
-        run: sudo apt update && sudo apt install gcc-aarch64-linux-gnu qemu-user-static makeself
+        run: sudo apt update && sudo apt install -y gcc-aarch64-linux-gnu qemu-user-static makeself
 
       - name: Make images
         run: ./make-images.sh

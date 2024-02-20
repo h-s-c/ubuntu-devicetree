@@ -10,11 +10,11 @@ The intended scenario is to flash the UEFI + devicetree Ubuntu image to a NVME d
 For convenience a up-to-date mainline U-Boot image for SD cards/eMMC is provided. 
 
 
-| SBC                | Ubuntu Image | U-Boot Image | U-Boot Flasher | 
-| ------------------ |:------------:| ------------:| --------------:|
-| PINE64 SOQuartz    | yes          | yes          | no             | 
-| NVIDIA Jetson Nano | yes          | no           | yes [^1]       | 
-| 96Boards HiKey960  | yes          | no           | wip            | 
+| SBC                 | Ubuntu Image       | U-Boot Image       | U-Boot Flasher          | 
+| ------------------- | -------------      | -------------      | ---------------         |
+| PINE64 SOQuartz     | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark:      | 
+| NVIDIA Jetson Nano  | :heavy_check_mark: | :x:                | :heavy_check_mark: [^1] | 
+| 96Boards HiKey960   | :heavy_check_mark: | :x:                | :construction:          | 
 
 
 [^1]: Small patch to allow NVME boot included
