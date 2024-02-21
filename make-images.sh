@@ -15,6 +15,19 @@ declare -A boards_cmd=(
   [soquartz]="console=ttyS02,1500000n8"
 )
 
+check_deps () {
+    echo "Checking dependencies"
+    for dep in aarch64-linux-gnu-gcc qemu-aarch64-static makeself
+    do
+      [[ $(which $dep 2>/dev/null) ]] || { echo "Please install $dep ";exit 1; }
+    done
+
+    for pylib in pyelftools
+    do
+      [[ $(pip3 list | grep -w $pylib 2>/dev/null) ]] || { echo "Please install python package $pylib ";exit 1; }
+    done
+}
+
 make_dtb () {
     echo "Making device tree blobs"
     cd source/linux
@@ -122,6 +135,7 @@ EOF
 
 download_img () {
     echo "Downloading" ${img}
+    mkdir -p cache/download
     cd cache/download
     wget -nc https://cdimage.ubuntu.com/ubuntu-server/daily-preinstalled/pending/${img}.xz
     cd ../..
@@ -138,6 +152,7 @@ open_img () {
     echo "Loop-back mounting" cache/${1}/${img}
     read img_root_dev <<<$(grep -o 'loop.p.' <<<"$(sudo kpartx -av cache/${1}/${img})")
     img_root_dev=/dev/mapper/${img_root_dev}
+    mkdir -p cache/${board}/image
     sudo mount ${img_root_dev} cache/${1}/image
 }
 
@@ -203,12 +218,9 @@ unmount_safe () {
     done
 }
 
-mkdir -p cache/download
-for board in ${boards[@]}; do
-    mkdir -p cache/${board}/run
-    mkdir -p cache/${board}/image
-done
 mkdir -p output
+
+check_deps
 
 make_uboot
 make_dtb
