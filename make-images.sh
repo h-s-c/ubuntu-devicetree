@@ -17,14 +17,14 @@ declare -A boards_cmd=(
 
 check_deps () {
     echo "Checking dependencies"
-    for dep in aarch64-linux-gnu-gcc qemu-aarch64-static makeself
+    for dep in aarch64-linux-gnu-gcc qemu-aarch64-static makeself pip3
     do
       [[ $(which $dep 2>/dev/null) ]] || { echo "Please install $dep ";exit 1; }
     done
 
     for pylib in pyelftools
     do
-      [[ $(pip3 list | grep -w $pylib 2>/dev/null) ]] || { echo "Please install python package $pylib ";exit 1; }
+      [[ $(pip3 list | grep -w $pylib 2>/dev/null) ]] || { echo "Please install python3 package $pylib ";exit 1; }
     done
 }
 
