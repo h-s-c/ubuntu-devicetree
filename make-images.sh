@@ -33,6 +33,7 @@ make_dtb () {
     cd source/linux
     export ARCH=arm64 
     export CROSS_COMPILE=aarch64-linux-gnu-
+    git apply ../../patch/linux/*.patch
     make defconfig
     make dtbs
     for board in ${boards[@]}; do
@@ -55,6 +56,7 @@ make_uboot () {
     # hikey960
     make hikey960_defconfig
     make -j$(nproc)
+    mkdir -p ../../cache/hikey960
     cp u-boot.bin ../../cache/hikey960/
     git reset --hard
     git clean -f -d
@@ -62,6 +64,7 @@ make_uboot () {
     git apply ../../patch/u-boot/jetson-nano/*.patch
     make p3450-0000_defconfig
     make -j$(nproc)
+    mkdir -p ../../cache/jetson-nano
     cp u-boot.bin ../../cache/jetson-nano/
     git reset --hard
     git clean -f -d
@@ -70,6 +73,7 @@ make_uboot () {
     export BL31="$(ls ../rkbin/bin/rk35/rk3568_bl31_v*.elf | sort | tail -n1)"
     make soquartz-cm4-rk3566_defconfig
     make -j$(nproc)
+    mkdir -p ../../cache/soquartz
     cp u-boot-rockchip.bin ../../cache/soquartz/
     git reset --hard
     git clean -f -d
@@ -80,7 +84,6 @@ make_uboot () {
 
     echo "Making u-boot images"
     # soquartz
-    mkdir -p cache/soquartz
     fallocate -l 17M cache/soquartz/sdcard.img
     parted -s cache/soquartz/sdcard.img mklabel gpt
     parted -s cache/soquartz/sdcard.img unit s mkpart uboot 64 16MiB

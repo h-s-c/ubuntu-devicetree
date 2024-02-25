@@ -19,7 +19,5 @@ For convenience an appropiate mainline U-Boot image is provided.
 | Supported SBC       | Ubuntu Image       | U-Boot Image       | U-Boot Flasher          |
 | ------------------- | -------------      | -------------      | ---------------         |
 | PINE64 SOQuartz     | :heavy_check_mark: | :heavy_check_mark: | :x:                     |
-| NVIDIA Jetson Nano  | :heavy_check_mark: | :x:                | :heavy_check_mark: [^1] |
+| NVIDIA Jetson Nano  | :heavy_check_mark: | :x:                | :heavy_check_mark:      |
 | 96Boards HiKey960   | :heavy_check_mark: | :x:                | :heavy_check_mark:      |
-
-[^1]: Small patch to allow NVME boot included
