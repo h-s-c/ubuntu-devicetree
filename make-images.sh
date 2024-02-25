@@ -80,6 +80,7 @@ make_uboot () {
 
     echo "Making u-boot images"
     # soquartz
+    mkdir -p cache/soquartz
     fallocate -l 17M cache/soquartz/sdcard.img
     parted -s cache/soquartz/sdcard.img mklabel gpt
     parted -s cache/soquartz/sdcard.img unit s mkpart uboot 64 16MiB
