@@ -8,16 +8,19 @@
 
 ### Overview
 This project modifies standard Ubuntu Preinstalled Server Arm64 UEFI images  
-to boot via devicetree blobs to allow some single-board computers to work properly.  
+to allow some single-board computers to work properly.  
 To ensure compatibility with updates most of the Ubuntu distribution and the kernel stay unmodified.  
 Only a devicetree blob is added and the GRUB boot loader configuration is slighly modified.  
 
 The intended use case is to flash the UEFI + devicetree Ubuntu image to a NVME drive  
 and to flash an EFI capable U-Boot boot loader to SD card/eMMC/SPI.  
-For convenience an appropiate mainline U-Boot image is provided.  
 
-| Supported SBC       | Ubuntu Image       | U-Boot Image       | U-Boot Flasher          |
-| ------------------- | -------------      | -------------      | ---------------         |
-| PINE64 SOQuartz     | :heavy_check_mark: | :heavy_check_mark: | :x:                     |
-| NVIDIA Jetson Nano  | :heavy_check_mark: | :x:                | :heavy_check_mark:      |
-| 96Boards HiKey960   | :heavy_check_mark: | :x:                | :heavy_check_mark:      |
+| Single Board Computer   | Form factor      | Ubuntu Image       |
+| ----------------------- | ---------------- | -------------      |
+| PINE64 SOQuartz         | Raspberry Pi CM4 | :heavy_check_mark: |
+| Banana Pi BPI-CM4       | Raspberry Pi CM4 | :construction:     |
+| Radxa CM3               | Raspberry Pi CM4 | :construction:     |
+| Milk-V Mars CM          | Raspberry Pi CM4 | :construction:     |
+| NVIDIA Jetson Nano      | Jetson SO-DIMM   | :heavy_check_mark: |
+| Turing RK1              | Jetson SO-DIMM   | :construction:     |
+| 96Boards HiKey960       | 96Boards CE      | :heavy_check_mark: |
