@@ -141,7 +141,7 @@ download_img () {
     echo "Downloading" ${img}
     mkdir -p cache/download
     cd cache/download
-    wget -nc https://cdimage.ubuntu.com/ubuntu-server/daily-preinstalled/pending/${img}.xz
+    wget -nc https://cdimage.ubuntu.com/ubuntu-server/noble/daily-preinstalled/current/${img}.xz
     cd ../..
 }
 
