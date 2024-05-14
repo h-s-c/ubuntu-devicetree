@@ -129,8 +129,9 @@ echo "Flashing u-boot image"
 wget -nc https://developer.nvidia.com/embedded/l4t/r32_release_v7.1/t210/jetson-210_linux_r32.7.1_aarch64.tbz2
 echo Extracting jetson-210_linux_r32.7.1_aarch64.tbz2
 tar xf jetson-210_linux_r32.7.1_aarch64.tbz2
+cp u-boot.bin Linux_for_Tegra/bootloader/t210ref/p3450-0000/
 docker pull nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1
-docker run -t --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v ./:/workspace -w /workspace/Linux_for_Tegra nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1 bash ./flash.sh --no-root-check -B /workspace/u-boot.bin p3448-0000-max-spi external
+docker run -t --privileged --net=host -v /dev/bus/usb:/dev/bus/usb -v ./:/workspace -w /workspace/Linux_for_Tegra nvcr.io/nvidia/jetson-linux-flash-x86:r35.4.1 bash ./flash.sh --no-root-check p3448-0000-max-spi external
 EOF
     chmod +x cache/jetson-nano/run/flash.sh
     makeself cache/jetson-nano/run output/u-boot-${uboot_version}-jetson-nano.run "Jetson Nano U-Boot flasher" ./flash.sh
