@@ -1,18 +1,20 @@
 #!/bin/bash
 
 img=noble-preinstalled-server-arm64.img
-boards=(hikey960 jetson-nano soquartz)
+boards=(hikey960 jetson-nano soquartz bananapi-cm4)
 
 declare -A boards_dts=(
   [hikey960]="hisilicon/hi3660-hikey960.dts"
   [jetson-nano]="nvidia/tegra210-p3450-0000.dts"
   [soquartz]="rockchip/rk3566-soquartz-cm4.dts"
+  [bananapi-cm4]="amlogic/meson-g12b-bananapi-cm4-cm4io.dts"
 )
 
 declare -A boards_cmd=(
   [hikey960]="console=ttyAMA6,115200n8"
   [jetson-nano]="console=ttyS0,115200n8"
   [soquartz]="console=ttyS02,1500000n8"
+  [bananapi-cm4]="console=ttyAML0,115200n8"
 )
 
 check_deps () {
