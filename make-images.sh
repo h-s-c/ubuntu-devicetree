@@ -58,7 +58,6 @@ make_uboot () {
     # hikey960
     make hikey960_defconfig
     make -j$(nproc)
-    mkdir -p ../../cache/hikey960
     cp u-boot.bin ../../cache/hikey960/
     git reset --hard
     git clean -f -d
@@ -66,7 +65,6 @@ make_uboot () {
     git apply ../../patch/u-boot/jetson-nano/*.patch
     make p3450-0000_defconfig
     make -j$(nproc)
-    mkdir -p ../../cache/jetson-nano
     cp u-boot.bin ../../cache/jetson-nano/
     git reset --hard
     git clean -f -d
@@ -75,7 +73,6 @@ make_uboot () {
     export BL31="$(ls ../rkbin/bin/rk35/rk3568_bl31_v*.elf | sort | tail -n1)"
     make soquartz-cm4-rk3566_defconfig
     make -j$(nproc)
-    mkdir -p ../../cache/soquartz
     cp u-boot-rockchip.bin ../../cache/soquartz/
     git reset --hard
     git clean -f -d
@@ -158,7 +155,7 @@ open_img () {
     echo "Loop-back mounting" cache/${1}/${img}
     read img_root_dev <<<$(grep -o 'loop.p.' <<<"$(sudo kpartx -av cache/${1}/${img})")
     img_root_dev=/dev/mapper/${img_root_dev}
-    mkdir -p cache/${board}/image
+    mkdir -p cache/${1}/image
     sudo mount ${img_root_dev} cache/${1}/image
 }
 
@@ -172,7 +169,7 @@ modify_grub_img () {
     echo "Modifying image for board" ${1}
     board_dtb="$(basename ${boards_dts[${1}]})"
     board_dtb="${board_dtb%.*}.dtb"
-    sudo cp cache/${board}/${board_dtb} cache/${1}/image/boot/dtb
+    sudo cp cache/${1}/${board_dtb} cache/${1}/image/boot/dtb
 
     sudo cat > cache/${1}/60_devicetree.cfg <<EOF
 # Devicetree specific Grub settings for UEFI Devicetree Images
@@ -227,6 +224,10 @@ unmount_safe () {
 mkdir -p output
 
 check_deps
+
+for board in ${boards[@]}; do
+    mkdir -p cache/${board}
+done
 
 make_uboot
 make_dtb
