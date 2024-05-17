@@ -18,3 +18,7 @@
 	path = source/edk2-non-osi
 	url = https://github.com/tianocore/edk2-non-osi
 	shallow = true
+[submodule "amlogic-boot-fip"]
+	path = source/amlogic-boot-fip
+	url = https://github.com/LibreELEC/amlogic-boot-fip
+	shallow = true
