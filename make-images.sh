@@ -94,7 +94,6 @@ make_uboot () {
     parted -s cache/soquartz/sdcard.img mklabel gpt
     parted -s cache/soquartz/sdcard.img unit s mkpart uboot 64 16MiB
     dd if=cache/soquartz/u-boot-rockchip.bin of=cache/soquartz/sdcard.img conv=fsync,notrunc seek=64 
-    sync
     xz --compress --threads=0 cache/soquartz/sdcard.img
     mv -f cache/soquartz/sdcard.img.xz output/u-boot-${uboot_version}-soquartz.img.xz
     # bananapi-cm4
