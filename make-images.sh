@@ -79,6 +79,7 @@ make_uboot () {
     unset ROCKCHIP_TPL
     unset BL31
     # bananapi-cm4
+    git apply ../../patch/u-boot/bananapi-cm4/*.patch
     make bananapi-cm4-cm4io_defconfig
     make -j$(nproc)
     cp u-boot.bin ../../cache/bananapi-cm4/
