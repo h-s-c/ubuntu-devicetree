@@ -92,8 +92,6 @@ make_uboot () {
     echo "Making u-boot images"
     # soquartz
     fallocate -l 17M cache/soquartz/sdcard.img
-    parted -s cache/soquartz/sdcard.img mklabel gpt
-    parted -s cache/soquartz/sdcard.img unit s mkpart uboot 64 16MiB
     dd if=cache/soquartz/u-boot-rockchip.bin of=cache/soquartz/sdcard.img conv=fsync,notrunc seek=64 
     xz --compress --threads=0 cache/soquartz/sdcard.img
     mv -f cache/soquartz/sdcard.img.xz output/u-boot-${uboot_version}-soquartz.img.xz
@@ -104,8 +102,6 @@ make_uboot () {
     git clean -f -d
     cd ../..
     fallocate -l 17M cache/bananapi-cm4/sdcard.img
-    parted -s cache/bananapi-cm4/sdcard.img mklabel gpt
-    parted -s cache/bananapi-cm4/sdcard.img unit s mkpart uboot 64 16MiB
     dd if=cache/bananapi-cm4/u-boot.bin.sd.bin of=cache/bananapi-cm4/sdcard.img conv=fsync,notrunc bs=512 skip=1 seek=1
     dd if=cache/bananapi-cm4/u-boot.bin.sd.bin of=cache/bananapi-cm4/sdcard.img conv=fsync,notrunc bs=1 count=440
     xz --compress --threads=0 cache/bananapi-cm4/sdcard.img
