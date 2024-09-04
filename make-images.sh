@@ -1,12 +1,13 @@
 #!/bin/bash
 
 img=noble-preinstalled-server-arm64.img
-boards=(hikey960 jetson-nano soquartz bananapi-cm4)
+boards=(hikey960 jetson-nano soquartz turing-rk1 bananapi-cm4)
 
 declare -A boards_dts=(
   [hikey960]="hisilicon/hi3660-hikey960.dts"
   [jetson-nano]="nvidia/tegra210-p3450-0000.dts"
   [soquartz]="rockchip/rk3566-soquartz-cm4.dts"
+  [turing-rk1]="rockchip/rk3588-turing-rk1.dts"
   [bananapi-cm4]="amlogic/meson-g12b-bananapi-cm4-cm4io.dts"
 )
 
@@ -14,6 +15,7 @@ declare -A boards_cmd=(
   [hikey960]="console=ttyAMA6,115200n8"
   [jetson-nano]="console=ttyS0,115200n8"
   [soquartz]="console=ttyS02,1500000n8"
+  [turing-rk1]="console=ttyS02,1500000n8"
   [bananapi-cm4]="console=ttyAML0,115200n8"
 )
 
@@ -78,6 +80,16 @@ make_uboot () {
     git clean -f -d
     unset ROCKCHIP_TPL
     unset BL31
+    # turing-rk1
+    export ROCKCHIP_TPL="$(ls ../rkbin/bin/rk35/rk3588_ddr_lp4_2112MHz_lp5_2400MHz_v*.bin | sort | tail -n1)"
+    export BL31="$(ls ../rkbin/bin/rk35/rk3588_bl31_v*.elf | sort | tail -n1)"
+    make turing-rk1-rk3588_defconfig
+    make -j$(nproc)
+    cp u-boot-rockchip.bin ../../cache/turing-rk1/
+    git reset --hard
+    git clean -f -d
+    unset ROCKCHIP_TPL
+    unset BL31
     # bananapi-cm4
     git apply ../../patch/u-boot/bananapi-cm4/*.patch
     make bananapi-cm4-cm4io_defconfig
@@ -95,6 +107,11 @@ make_uboot () {
     dd if=cache/soquartz/u-boot-rockchip.bin of=cache/soquartz/sdcard.img conv=fsync,notrunc seek=64 
     xz --compress --threads=0 cache/soquartz/sdcard.img
     mv -f cache/soquartz/sdcard.img.xz output/u-boot-${uboot_version}-soquartz.img.xz
+    # turing-rk1
+    fallocate -l 17M cache/turing-rk1/sdcard.img
+    dd if=cache/turing-rk1/u-boot-rockchip.bin of=cache/turing-rk1/sdcard.img conv=fsync,notrunc seek=64 
+    xz --compress --threads=0 cache/turing-rk1/sdcard.img
+    mv -f cache/turing-rk1/sdcard.img.xz output/u-boot-${uboot_version}-turing-rk1.img.xz
     # bananapi-cm4
     cd source/amlogic-boot-fip
     ./build-fip.sh bananapi-cm4io ../../cache/bananapi-cm4/u-boot.bin ../../cache/bananapi-cm4
