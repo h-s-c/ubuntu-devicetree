@@ -5,7 +5,7 @@
 [submodule "u-boot"]
 	path = source/u-boot
 	url = https://github.com/u-boot/u-boot
-	shallow = true
+	shallow = false
 [submodule "rkbin"]
 	path = source/rkbin
 	url = https://github.com/rockchip-linux/rkbin
