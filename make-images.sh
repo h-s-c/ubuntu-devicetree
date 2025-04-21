@@ -1,6 +1,6 @@
 #!/bin/bash
 
-img=noble-preinstalled-server-arm64.img
+img=plucky-preinstalled-server-arm64.img
 boards=(hikey960 jetson-nano soquartz turing-rk1 bananapi-cm4)
 
 declare -A boards_dts=(
@@ -173,7 +173,7 @@ download_img () {
     echo "Downloading" ${img}
     mkdir -p cache/download
     cd cache/download
-    wget -nc https://cdimage.ubuntu.com/ubuntu-server/noble/daily-preinstalled/current/${img}.xz
+    wget -nc https://cdimage.ubuntu.com/ubuntu-server/daily-preinstalled/current/${img}.xz
     cd ../..
 }
 
