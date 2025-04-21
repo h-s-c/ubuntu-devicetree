@@ -73,6 +73,7 @@ make_uboot () {
     # soquartz
     export ROCKCHIP_TPL="$(ls ../rkbin/bin/rk35/rk3566_ddr_1056MHz_v*.bin | sort | tail -n1)"
     export BL31="$(ls ../rkbin/bin/rk35/rk3568_bl31_v*.elf | sort | tail -n1)"
+    git apply ../../patch/u-boot/soquartz/*.patch
     make soquartz-cm4-rk3566_defconfig
     make -j$(nproc)
     cp u-boot-rockchip.bin ../../cache/soquartz/
