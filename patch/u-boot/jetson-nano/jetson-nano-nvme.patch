@@ -1,12 +1,24 @@
-diff --git a/include/configs/p3450-0000.h b/include/configs/p3450-0000.h
-index e60f42eaa7..2e326d1684 100644
---- a/include/configs/p3450-0000.h
-+++ b/include/configs/p3450-0000.h
-@@ -19,6 +19,7 @@
- #define BOOT_TARGET_DEVICES(func) \
- 	func(MMC, mmc, 1) \
- 	func(MMC, mmc, 0) \
-+	func(NVME, nvme, 0) \
- 	func(PXE, pxe, na) \
- 	func(DHCP, dhcp, na)
+diff --git a/configs/p3450-0000_defconfig b/configs/p3450-0000_defconfig
+index a002178b7fb..b5d0d2df4b5 100644
+--- a/configs/p3450-0000_defconfig
++++ b/configs/p3450-0000_defconfig
+@@ -1,3 +1,6 @@
++CONFIG_NVME=y
++CONFIG_NVME_PCI=y
++CONFIG_CMD_NVME=y
+ CONFIG_ARM=y
+ CONFIG_SYS_HAS_NONCACHED_MEMORY=y
+ CONFIG_COUNTER_FREQUENCY=19200000
+diff --git a/include/configs/tegra-common-post.h b/include/configs/tegra-common-post.h
+index 2f08dfed020..1f5b6711ebc 100644
+--- a/include/configs/tegra-common-post.h
++++ b/include/configs/tegra-common-post.h
+@@ -7,7 +7,7 @@
+ #ifndef __TEGRA_COMMON_POST_H
+ #define __TEGRA_COMMON_POST_H
  
+-#define BOOT_TARGETS	"usb mmc1 mmc0 pxe dhcp"
++#define BOOT_TARGETS	"nvme usb mmc1 mmc0 pxe dhcp"
+ 
+ #ifdef CONFIG_TEGRA_KEYBOARD
+ #define STDIN_KBD_KBC ",tegra-kbc"
