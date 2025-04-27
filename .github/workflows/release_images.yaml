@@ -30,7 +30,7 @@ jobs:
           submodules: true
 
       - name: Install dependencies
-        run: sudo apt update && sudo apt install -y gcc-aarch64-linux-gnu qemu-user-static makeself python3-pyelftools
+        run: sudo apt update && sudo apt install -y gcc-aarch64-linux-gnu qemu-user-static makeself python3-pyelftools libgnutls28-dev
 
       - name: Make images
         run: ./make-images.sh
